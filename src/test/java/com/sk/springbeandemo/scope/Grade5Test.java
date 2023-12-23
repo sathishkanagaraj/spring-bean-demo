@@ -1,6 +1,9 @@
 package com.sk.springbeandemo.scope;
 
 import com.sk.springbeandemo.config.AppConfig;
+import com.sk.springbeandemo.scope.prototype.BrightStudent;
+import com.sk.springbeandemo.scope.prototype.BrilliantStudent;
+import com.sk.springbeandemo.scope.prototype.OutstandingStudent;
 import com.sk.springbeandemo.scope.singleton.Grade5;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,5 +62,34 @@ class Grade5Test {
         //So the call to instantiate StudentImpl happens twice can only be tested by logging or
         // I have just created a method which retrieve the value which is initialised during instantiation.
         assertNotEquals(grade5.retrieveStudentEnglishAnnualMark(), grade5_2.retrieveStudentEnglishAnnualMark());
+    }
+
+    @Test
+    public void testPrototypeBehavesSingletonWithoutProxyBeingSet(){
+        BrightStudent bean1 = ctx.getBean(BrightStudent.class);
+        BrightStudent bean2 = ctx.getBean(BrightStudent.class);
+        // it proves it still a singleton even though setting the scope to prototype
+        assertEquals(bean1, bean2);
+        assertEquals(bean1.getMark(), bean2.getMark());
+    }
+
+    @Test
+    public void testPrototypeBehaveWellWhenProxyIsSet(){
+        BrilliantStudent bean1 = ctx.getBean(BrilliantStudent.class);
+        BrilliantStudent bean2 = ctx.getBean(BrilliantStudent.class);
+        // two beans were equal because proxy was created and injected
+        // in the place of the real bean by the spring IoC container
+        assertEquals(bean1, bean2);
+        // but the bean is clearly instantiated twice because of scope prototype
+        // and initialised mark with different random integer twice when called twice.
+        //that is why getMark is not equal because of two random integers were generated
+        assertNotEquals(bean1.getMark(), bean2.getMark());
+    }
+
+    @Test
+    public void testMarkAnnotationThatReflectAsSameASBrilliant(){
+        OutstandingStudent bean1 = ctx.getBean(OutstandingStudent.class);
+        OutstandingStudent bean2 = ctx.getBean(OutstandingStudent.class);
+        assertNotEquals(bean1.getMark(), bean2.getMark());
     }
 }
