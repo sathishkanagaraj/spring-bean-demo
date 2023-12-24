@@ -11,17 +11,12 @@ import org.springframework.context.annotation.PropertySource;
         "com.sk.springbeandemo.beans",
 "com.sk.springbeandemo.scope"})
 @Configuration
-@PropertySource("classpath:custom.properties")
+@PropertySource("classpath:db/dev-datasource.properties")
 public class AppConfig {
-
-
     @Bean
     @Mark
     public OutstandingStudent outstandingStudentBean(){
         return new OutstandingStudent();
     }
-
-
-
 
 }

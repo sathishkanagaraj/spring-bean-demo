@@ -12,10 +12,12 @@ public class ComplexBeanImpl implements ComplexBean {
     private final String timeout;
     private final int wakeup;
 
+    private AnotherSimpleBean anotherSimpleBean;
+
     public ComplexBeanImpl(SimpleBean simpleBean,
                            @Value("${app.timeout}") String timeout,
                            @Value("${app.wakeup}") int wakeup) {
-        LOGGER.info("Complex Bean Impl identified even with additional arguments in the constructor");
+        LOGGER.info("Complex Bean Impl constructor identified for instantiation even with additional arguments in the constructor");
         this.simpleBean = simpleBean;
         this.timeout = timeout;
         this.wakeup = wakeup;
@@ -33,5 +35,22 @@ public class ComplexBeanImpl implements ComplexBean {
         int totalTime = Integer.parseInt(timeout) + wakeup;
         LOGGER.info("Total time taken : {}",totalTime);
         return simpleBean;
+    }
+
+    /**
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        LOGGER.info("Now the properties all set, we can do something funky");
+        anotherSimpleBean = new AnotherSimpleBean();
+
+    }
+
+    /**
+     * @throws Exception - exception
+     */
+    @Override
+    public void destroy() throws Exception {
+        LOGGER.info("Disposable Bean - I am always called at the end of Bean lifecycle and I will be called only once in the lifecycle");
     }
 }
